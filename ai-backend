@@ -6,7 +6,7 @@ app = Flask(__name__)
 with open("prompt.txt") as f:
     system_prompt = f.read()
 
-API_KEY = "PASTE_YOUR_API_KEY"
+API_KEY = "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"
 
 @app.route("/chat", methods=["POST"])
 def chat():

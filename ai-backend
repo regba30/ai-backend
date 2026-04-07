@@ -1,0 +1,32 @@
+from flask import Flask, request, jsonify
+import requests
+
+app = Flask(__name__)
+
+with open("prompt.txt") as f:
+    system_prompt = f.read()
+
+API_KEY = "PASTE_YOUR_API_KEY"
+
+@app.route("/chat", methods=["POST"])
+def chat():
+    user = request.json["message"]
+
+    response = requests.post(
+        "https://openrouter.ai/api/v1/chat/completions",
+        headers={
+            "Authorization": f"Bearer {API_KEY}"
+        },
+        json={
+            "model": "openai/gpt-3.5-turbo",
+            "messages": [
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": user}
+            ]
+        }
+    )
+
+    reply = response.json()["choices"][0]["message"]["content"]
+    return jsonify({"reply": reply})
+
+app.run(host="0.0.0.0", port=10000)
